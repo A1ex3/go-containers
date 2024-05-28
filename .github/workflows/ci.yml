@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+env:
+  REPO_NAME: go-containers
+  CHANGELOG_FILE: changelog.txt
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.18', '1.19', '1.20', '1.21', '1.22']
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Display Go version
+        run: go version
+
+      - name: Test
+        run: go test -coverpkg=./...
+
+  release:
+    name: Release
+    needs: test
+    runs-on: ubuntu-latest
+    if: ${{ needs.test.result == 'success' && startsWith(github.ref, 'refs/heads/v') }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Upgrade & Dependency installation
+        run: |
+          sudo apt-get update && sudo apt-get upgrade -y
+          sudo apt-get install zip -y
+
+      - name: Get Change log
+        run: |
+          sudo chmod +x .ci/get_changelog.sh
+          ./.ci/get_changelog.sh ${{env.CHANGELOG_FILE}} > ${{ env.CHANGELOG_FILE }}.tmp
+      
+      - name: Get the latest version from the change logs
+        run: |
+          version=$(cat ${{ env.CHANGELOG_FILE }}.tmp | grep -oP '^v\d+\.\d+\.\d+')
+          echo "version=${version}" >> $GITHUB_ENV
+
+      - name: Archiving a package
+        run: |
+          rm -rf .ci/ .github/ .gitignore
+          cd ..
+          tar -czvf ${{ env.REPO_NAME }}.tar.gz ${{ env.REPO_NAME }}/
+          zip ${{ env.REPO_NAME }}.zip ${{ env.REPO_NAME }}/*
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: ${{ env.CHANGELOG_FILE }}.tmp
+          files: |
+            ${{ env.REPO_NAME }}.tar.gz
+            ${{ env.REPO_NAME }}.zip
+          tag_name: ${{ env.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS }}
