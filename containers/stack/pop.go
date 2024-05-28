@@ -6,16 +6,15 @@ import (
 )
 
 func (s *stack[T]) pop() (T, error) {
-	l := len(s.data)
-	if l == 0 {
+	if s.size == 0 {
 		var t byte = 0
 		return *(*T)(unsafe.Pointer(&t)), errors.New("empty stack")
 	}
 
 	// Retrieve the top element from the stack
-	res := s.data[l-1]
+	res := s.data[s.size-1]
 	// Remove the top element from the stack
-	s.data = s.data[:l-1]
+	s.data = s.data[:s.size-1]
 	s.size--
 	return res, nil
 }
