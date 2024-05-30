@@ -1,7 +1,7 @@
 package linkedlist
 
 func (ll *linkedList[T]) insertLast(data T) {
-	newNode := &linkedListNode[T]{data: data}
+	newNode := &LinkedListNode[T]{data: data}
 	if ll.tail == nil {
 		ll.head = newNode
 		ll.tail = newNode

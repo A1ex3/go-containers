@@ -1,12 +1,14 @@
-package linkedlist
+package concurrency
 
 import (
 	"sync"
 	"testing"
+
+	linkedlist "github.com/a1ex3/go-containers/containers/linked_list"
 )
 
 func TestLinkedList_InsertLast(t *testing.T) {
-	var ll ILinkedList[int] = NewLinkedList[int]()
+	var ll linkedlist.ILinkedList[int] = NewLinkedList[int]()
 	wg := sync.WaitGroup{}
 
 	wg.Add(2)
@@ -28,7 +30,7 @@ func TestLinkedList_InsertLast(t *testing.T) {
 }
 
 func TestLinkedList_InsertFirst(t *testing.T) {
-	var ll ILinkedList[int] = NewLinkedList[int]()
+	var ll linkedlist.ILinkedList[int] = NewLinkedList[int]()
 	wg := sync.WaitGroup{}
 
 	wg.Add(2)
@@ -50,7 +52,7 @@ func TestLinkedList_InsertFirst(t *testing.T) {
 }
 
 func TestLinkedList_GetByIndex(t *testing.T) {
-	var ll ILinkedList[int] = NewLinkedList[int]()
+	var ll linkedlist.ILinkedList[int] = NewLinkedList[int]()
 	ll.InsertLast(1)
 	ll.InsertLast(2)
 
@@ -89,7 +91,7 @@ func TestLinkedList_GetByIndex(t *testing.T) {
 }
 
 func TestLinkedList_Remove(t *testing.T) {
-	var ll ILinkedList[int] = NewLinkedList[int]()
+	var ll linkedlist.ILinkedList[int] = NewLinkedList[int]()
 	ll.InsertLast(1)
 	ll.InsertLast(2)
 	ll.InsertLast(3)
@@ -120,7 +122,7 @@ func TestLinkedList_Remove(t *testing.T) {
 }
 
 func TestLinkedList_Clear(t *testing.T) {
-	var ll ILinkedList[int] = NewLinkedList[int]()
+	var ll linkedlist.ILinkedList[int] = NewLinkedList[int]()
 	ll.InsertLast(1)
 	ll.InsertLast(2)
 
@@ -132,7 +134,7 @@ func TestLinkedList_Clear(t *testing.T) {
 }
 
 func TestLinkedList_Contains(t *testing.T) {
-	var ll ILinkedList[int] = NewLinkedList[int]()
+	var ll linkedlist.ILinkedList[int] = NewLinkedList[int]()
 	ll.InsertLast(1)
 	ll.InsertLast(2)
 
@@ -146,7 +148,7 @@ func TestLinkedList_Contains(t *testing.T) {
 }
 
 func TestLinkedList_Size(t *testing.T) {
-	var ll ILinkedList[int] = NewLinkedList[int]()
+	var ll linkedlist.ILinkedList[int] = NewLinkedList[int]()
 	ll.InsertLast(1)
 	ll.InsertLast(2)
 

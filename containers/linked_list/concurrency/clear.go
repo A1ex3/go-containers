@@ -1,13 +1,10 @@
-package linkedlist
+package concurrency
 
 func (ll *linkedList[T]) clear() bool {
 	ll.mu.Lock()
 	defer ll.mu.Unlock()
 
-	ll.head = nil
-	ll.tail = nil
-	ll.size = 0
-	return true
+	return ll.linkedListSync.Clear()
 }
 
 // Clear removes all elements from the linked list and resets the head, tail, and size.

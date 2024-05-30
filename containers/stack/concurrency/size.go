@@ -3,7 +3,7 @@ package concurrency
 func (s *stackConcurrency[T]) size_() int {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	return s.data.Size()
+	return s.stackSync_.Size()
 }
 
 // Size returns the current number of elements in the stack.

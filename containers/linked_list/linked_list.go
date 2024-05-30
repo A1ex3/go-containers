@@ -13,7 +13,7 @@ type ILinkedList[T any] interface {
 	IndexOf(value T) (int, error)
 
 	// Get returns the head node of the linked list.
-	Get() *linkedListNode[T]
+	Get() *LinkedListNode[T]
 
 	// GetByIndex returns the data of the node at the specified index in the linked list.
 	// If the index is out of bounds, it returns an error.
@@ -36,15 +36,15 @@ type ILinkedList[T any] interface {
 }
 
 // linkedListNode represents a node in the linked list containing generic data and a reference to the next node.
-type linkedListNode[T any] struct {
+type LinkedListNode[T any] struct {
 	data T
-	next *linkedListNode[T]
+	next *LinkedListNode[T]
 }
 
 // linkedList represents the linked list structure with references to the head, tail, and size.
 type linkedList[T any] struct {
-	head *linkedListNode[T]
-	tail *linkedListNode[T]
+	head *LinkedListNode[T]
+	tail *LinkedListNode[T]
 	size int
 }
 

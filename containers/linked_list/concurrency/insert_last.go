@@ -1,18 +1,10 @@
-package linkedlist
+package concurrency
 
 func (ll *linkedList[T]) insertLast(data T) {
 	ll.mu.Lock()
 	defer ll.mu.Unlock()
 
-	newNode := &linkedListNode[T]{data: data}
-	if ll.tail == nil {
-		ll.head = newNode
-		ll.tail = newNode
-	} else {
-		ll.tail.next = newNode
-		ll.tail = newNode
-	}
-	ll.size++
+	ll.linkedListSync.InsertLast(data)
 }
 
 // InsertLast inserts a new element with the given data at the end of the linked list.

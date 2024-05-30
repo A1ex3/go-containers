@@ -1,25 +1,10 @@
-package linkedlist
-
-import (
-	"errors"
-	"unsafe"
-)
+package concurrency
 
 func (ll *linkedList[T]) getByIndex(index int) (T, error) {
 	ll.mu.Lock()
 	defer ll.mu.Unlock()
 
-	if index < 0 || index >= ll.size {
-		var t byte = 0
-		return *(*T)(unsafe.Pointer(&t)), errors.New("index out of range")
-	}
-
-	current := ll.head
-	for i := 0; i < index; i++ {
-		current = current.next
-	}
-
-	return current.data, nil
+	return ll.linkedListSync.GetByIndex(index)
 }
 
 // GetByIndex returns the data of the node at the specified index in the linked list.

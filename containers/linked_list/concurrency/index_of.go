@@ -1,24 +1,10 @@
-package linkedlist
-
-import (
-	"errors"
-	"reflect"
-)
+package concurrency
 
 func (ll *linkedList[T]) indexOf(value T) (int, error) {
 	ll.mu.Lock()
 	defer ll.mu.Unlock()
 
-	current := ll.head
-	index := 0
-	for current != nil {
-		if reflect.DeepEqual(current.data, value) {
-			return index, nil
-		}
-		current = current.next
-		index++
-	}
-	return -1, errors.New("value not found")
+	return ll.linkedListSync.IndexOf(value)
 }
 
 // IndexOf returns the index of the first occurrence of the specified value in the linked list.

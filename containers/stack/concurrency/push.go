@@ -4,7 +4,7 @@ func (s *stackConcurrency[T]) push(value T) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	s.data.InsertLast(value)
+	s.stackSync_.Push(value)
 }
 
 // Push adds a new element to the top of the stack.

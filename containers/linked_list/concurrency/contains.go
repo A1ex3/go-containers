@@ -1,19 +1,10 @@
-package linkedlist
-
-import "reflect"
+package concurrency
 
 func (ll *linkedList[T]) contains(value T) bool {
 	ll.mu.Lock()
 	defer ll.mu.Unlock()
 
-	current := ll.head
-	for current != nil {
-		if reflect.DeepEqual(current.data, value) {
-			return true
-		}
-		current = current.next
-	}
-	return false
+	return ll.linkedListSync.Contains(value)
 }
 
 // Contains checks whether the specified value exists in the linked list.
