@@ -27,9 +27,7 @@ func newStackConcurrency[T any]() *stackConcurrency[T] {
 	}
 }
 
-// NewStackConcurrency initializes a new instance of StackConcurrency with the specified size.
-// If no size is provided, a default size of 10 is used.
-// If more than one size argument is provided, it panics with an appropriate error message.
+// NewStackConcurrency initializes a new instance of StackConcurrency.
 func NewStackConcurrency[T any]() *StackConcurrency[T] {
 	st := newStackConcurrency[T]()
 	return &StackConcurrency[T]{

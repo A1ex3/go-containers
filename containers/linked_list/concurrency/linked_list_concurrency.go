@@ -18,7 +18,7 @@ type LinkedList[T any] struct {
 }
 
 // newLinkedList creates a new instance of the linked list implementation.
-func newLinkedList[T any]() *linkedList[T] {
+func newLinkedListConcurrency[T any]() *linkedList[T] {
 	linkedListSync_ := linkedlist.NewLinkedList[T]()
 	return &linkedList[T]{
 		mu:         sync.Mutex{},
@@ -27,8 +27,8 @@ func newLinkedList[T any]() *linkedList[T] {
 }
 
 // NewLinkedList creates a new instance of the public LinkedList API.
-func NewLinkedList[T any]() *LinkedList[T] {
-	linkedList := newLinkedList[T]()
+func NewLinkedListConcurrency[T any]() *LinkedList[T] {
+	linkedList := newLinkedListConcurrency[T]()
 
 	return &LinkedList[T]{
 		linkedList_: linkedList,

@@ -30,9 +30,7 @@ func newStack[T any]() *stack[T] {
 	}
 }
 
-// NewStack initializes a new instance of Stack with the specified size.
-// If no size is provided, a default size of 10 is used.
-// If more than one size argument is provided, it panics with an appropriate error message.
+// NewStack initializes a new instance of Stack.
 func NewStack[T any]() *Stack[T] {
 	st := newStack[T]()
 	return &Stack[T]{

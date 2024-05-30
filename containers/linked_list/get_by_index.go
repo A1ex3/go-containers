@@ -2,13 +2,13 @@ package linkedlist
 
 import (
 	"errors"
-	"unsafe"
 )
 
 func (ll *linkedList[T]) getByIndex(index int) (T, error) {
+	var zero T
+
 	if index < 0 || index >= ll.size {
-		var t byte = 0
-		return *(*T)(unsafe.Pointer(&t)), errors.New("index out of range")
+		return zero, errors.New("index out of range")
 	}
 
 	current := ll.head
