@@ -9,16 +9,22 @@ func (s *stackConcurrency[T]) pop() (T, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if s.size == 0 {
+	if s.data.Size() == 0 {
 		// Returning a zero value for T when the stack is empty
 		var t byte = 0
 		return *(*T)(unsafe.Pointer(&t)), errors.New("empty stack")
 	}
 
-	res := s.data[s.size-1]
+	res, err := s.data.GetByIndex(s.data.Size() - 1)
+	if err != nil {
+		var t byte = 0
+		return *(*T)(unsafe.Pointer(&t)), err
+	}
 	// Remove the top element from the stack
-	s.data = s.data[:s.size-1]
-	s.size--
+	if !s.data.Remove(s.data.Size() - 1) {
+		var t byte = 0
+		return *(*T)(unsafe.Pointer(&t)), errors.New("failed to remove an element from the stack")
+	}
 	return res, nil
 }
 

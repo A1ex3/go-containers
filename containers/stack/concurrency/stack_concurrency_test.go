@@ -7,7 +7,7 @@ import (
 	"github.com/a1ex3/go-containers/containers/stack"
 )
 
-func TestPushPopConcurrency(t *testing.T) {
+func TestStackConcurrency_PushPopConcurrency(t *testing.T) {
 	var wg sync.WaitGroup
 	testData := make([]int, 0)
 	var stack stack.IStack[int] = NewStackConcurrency[int]()

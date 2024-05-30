@@ -5,9 +5,9 @@ import (
 	"testing"
 )
 
-func TestPushPopSync(t *testing.T) {
+func TestStack_PushPop(t *testing.T) {
 	var testData []int = []int{1, 2, 3, 4, 5}
-	var stack IStack[int] = NewStack[int](100)
+	var stack IStack[int] = NewStack[int]()
 
 	for _, v := range testData {
 		stack.Push(v)

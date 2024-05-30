@@ -4,3 +4,4 @@
 | Structure | Thread-safe |
 | - | - |
 | Stack | &#10003; |
+| Linked list | &#10003; |

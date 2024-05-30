@@ -1,8 +1,7 @@
 package stack
 
 func (s *stack[T]) push(value T) {
-	s.data = append(s.data, value)
-	s.size++
+	s.data.InsertLast(value)
 }
 
 // Push adds a new element to the top of the stack.
