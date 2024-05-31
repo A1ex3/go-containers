@@ -17,7 +17,7 @@ func (s *stack[T]) pop() (T, error) {
 		return zero, err
 	}
 	// Remove the top element from the stack
-	if !s.data.Remove(s.data.Size() - 1) {
+	if !s.data.RemoveLast() {
 		return zero, errors.New("failed to remove an element from the stack")
 	}
 	return res, nil

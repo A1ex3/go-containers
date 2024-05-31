@@ -18,7 +18,7 @@ func (q *queue[T]) pop() (T, error) {
 	}
 
 	// Remove the element from the queue.
-	if !q.data.Remove(0) {
+	if !q.data.RemoveFirst() {
 		return zero, errors.New("failed to remove an element from the queue")
 	}
 	return res, nil
