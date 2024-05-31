@@ -6,6 +6,7 @@ func (ll *linkedList[T]) insertLast(data T) {
 		ll.head = newNode
 		ll.tail = newNode
 	} else {
+		newNode.prev = ll.tail
 		ll.tail.next = newNode
 		ll.tail = newNode
 	}

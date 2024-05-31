@@ -156,3 +156,205 @@ func TestLinkedList_Size(t *testing.T) {
 		t.Errorf("Expected size to be 2, got %d", ll.Size())
 	}
 }
+
+func TestInsertAt(t *testing.T) {
+	var ll linkedlist.ILinkedList[int] = NewLinkedListConcurrency[int]()
+	ll.InsertLast(1)
+	ll.InsertLast(2)
+	ll.InsertLast(3)
+
+	err := ll.InsertAt(4, 1)
+	if err != nil || ll.Size() != 4 || ll.ToSlice()[1] != 4 {
+		t.Errorf("Expected insertion at index 1 to be successful")
+	}
+
+	err = ll.InsertAt(5, 5)
+	if err == nil {
+		t.Errorf("Expected out of bounds error for insertion")
+	}
+}
+
+func TestRemoveFirst(t *testing.T) {
+	var ll linkedlist.ILinkedList[int] = NewLinkedListConcurrency[int]()
+	ll.InsertLast(1)
+	ll.InsertLast(2)
+	ll.InsertLast(3)
+
+	removed := ll.RemoveFirst()
+	if !removed || ll.Size() != 2 || ll.ToSlice()[0] != 2 {
+		t.Errorf("Expected removal of first element to be successful")
+	}
+
+	ll.Clear()
+	removed = ll.RemoveFirst()
+	if removed {
+		t.Errorf("Expected removal of first element to be unsuccessful on empty list")
+	}
+}
+
+func TestRemoveLast(t *testing.T) {
+	var ll linkedlist.ILinkedList[int] = NewLinkedListConcurrency[int]()
+	ll.InsertLast(1)
+	ll.InsertLast(2)
+	ll.InsertLast(3)
+
+	removed := ll.RemoveLast()
+	if !removed || ll.Size() != 2 || ll.ToSlice()[1] != 2 {
+		t.Errorf("Expected removal of last element to be successful")
+	}
+
+	ll.Clear()
+	removed = ll.RemoveLast()
+	if removed {
+		t.Errorf("Expected removal of last element to be unsuccessful on empty list")
+	}
+}
+
+func TestReverse(t *testing.T) {
+	var ll linkedlist.ILinkedList[int] = NewLinkedListConcurrency[int]()
+	ll.InsertLast(1)
+	ll.InsertLast(2)
+	ll.InsertLast(3)
+	ll.Reverse()
+
+	slice := ll.ToSlice()
+	if slice[0] != 3 || slice[1] != 2 || slice[2] != 1 {
+		t.Errorf("Expected reversed list to be [3, 2, 1], got %v", slice)
+	}
+}
+
+func TestToSlice(t *testing.T) {
+	var ll linkedlist.ILinkedList[int] = NewLinkedListConcurrency[int]()
+	ll.InsertLast(1)
+	ll.InsertLast(2)
+	ll.InsertLast(3)
+
+	slice := ll.ToSlice()
+	if slice[0] != 1 || slice[1] != 2 || slice[2] != 3 {
+		t.Errorf("Expected slice to be [1, 2, 3], got %v", slice)
+	}
+}
+
+func TestForEach(t *testing.T) {
+	var ll linkedlist.ILinkedList[int] = NewLinkedListConcurrency[int]()
+	ll.InsertLast(1)
+	ll.InsertLast(2)
+	ll.InsertLast(3)
+
+	var sum int
+	ll.ForEach(func(val int) {
+		sum += val
+	})
+
+	if sum != 6 {
+		t.Errorf("Expected sum to be 6, got %d", sum)
+	}
+}
+
+func TestFind(t *testing.T) {
+	var ll linkedlist.ILinkedList[int] = NewLinkedListConcurrency[int]()
+	ll.InsertLast(1)
+	ll.InsertLast(2)
+	ll.InsertLast(3)
+
+	val, err := ll.Find(func(val int) bool {
+		return val > 1
+	})
+
+	if val != 2 || err != nil {
+		t.Errorf("Expected first value greater than 1 to be 2, got %v, error: %v", val, err)
+	}
+
+	_, err = ll.Find(func(val int) bool {
+		return val > 3
+	})
+
+	if err == nil {
+		t.Errorf("Expected error for predicate not satisfied")
+	}
+}
+
+func TestLinkedListIterator(t *testing.T) {
+	ll := linkedlist.NewLinkedList[int]()
+	ll.InsertLast(1)
+	ll.InsertLast(2)
+	ll.InsertLast(3)
+
+	iter := NewIteratorConcurrency[int](ll)
+
+	var sum int
+	var wg sync.WaitGroup
+	wg.Add(3)
+
+	for i := 0; i < 3; i++ {
+		go func() {
+			defer wg.Done()
+			for iter.HasNext() {
+				val, err := iter.Next()
+				if err != nil {
+					t.Errorf("Unexpected error: %v", err)
+				}
+				sum += val
+			}
+		}()
+	}
+
+	wg.Wait()
+
+	expectedSum := 1 + 2 + 3
+	if sum != expectedSum {
+		t.Errorf("Expected sum to be %d, got %d", expectedSum, sum)
+	}
+}
+
+func TestUpdate(t *testing.T) {
+	// Create a new linked list
+	ll := NewLinkedListConcurrency[int]()
+
+	// Use a WaitGroup to synchronize goroutines
+	var wg sync.WaitGroup
+
+	// Insert elements into the linked list concurrently
+	for i := 0; i < 2; i++ { // Reduced to 2 goroutines to simulate a potential deadlock
+		wg.Add(1)
+		go func(n int) {
+			defer wg.Done()
+			// Acquire the lock to insert an element
+			ll.InsertLast(n)
+		}(i)
+	}
+
+	// Wait for all insertion goroutines to finish
+	wg.Wait()
+
+	// Use another WaitGroup for updating data concurrently
+	var updateWg sync.WaitGroup
+
+	// Update data in the linked list concurrently
+	for i := 0; i < 2; i++ { // Reduced to 2 goroutines to simulate a potential deadlock
+		updateWg.Add(1)
+		go func(n int) {
+			defer updateWg.Done()
+			// Acquire the lock to update data
+			err := ll.Update(n*10, n)
+			if err != nil {
+				t.Errorf("Failed to update data at index %d: %v", n, err)
+			}
+		}(i)
+	}
+
+	// Wait for all update goroutines to finish
+	updateWg.Wait()
+
+	// Verify that the data is updated correctly
+	for i := 0; i < 2; i++ {
+		data, err := ll.GetByIndex(i)
+		if err != nil {
+			t.Errorf("Failed to get data at index %d: %v", i, err)
+		}
+		expected := i * 10
+		if data != expected {
+			t.Errorf("Data at index %d does not match expected value. Got: %d, Expected: %d", i, data, expected)
+		}
+	}
+}

@@ -5,17 +5,14 @@ import (
 )
 
 func (ll *linkedList[T]) getByIndex(index int) (T, error) {
-	var zero T
-
 	if index < 0 || index >= ll.size {
-		return zero, errors.New("index out of range")
+		var zero T
+		return zero, errors.New("index out of bounds")
 	}
-
 	current := ll.head
 	for i := 0; i < index; i++ {
 		current = current.next
 	}
-
 	return current.data, nil
 }
 

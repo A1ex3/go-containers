@@ -7,6 +7,7 @@ func (ll *linkedList[T]) insertFirst(data T) {
 		ll.tail = newNode
 	} else {
 		newNode.next = ll.head
+		ll.head.prev = newNode
 		ll.head = newNode
 	}
 	ll.size++
