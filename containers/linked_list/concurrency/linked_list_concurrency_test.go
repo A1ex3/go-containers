@@ -1,8 +1,10 @@
 package concurrency
 
 import (
+	"reflect"
 	"sync"
 	"testing"
+	"time"
 
 	linkedlist "github.com/a1ex3/go-containers/containers/linked_list"
 )
@@ -356,5 +358,120 @@ func TestUpdate(t *testing.T) {
 		if data != expected {
 			t.Errorf("Data at index %d does not match expected value. Got: %d, Expected: %d", i, data, expected)
 		}
+	}
+}
+
+func TestSwap(t *testing.T) {
+	var wg sync.WaitGroup
+
+	ll1 := NewLinkedListConcurrency[int]()
+	for i := 0; i < 3; i++ {
+		wg.Add(1)
+		go func(n int) {
+			defer wg.Done()
+			ll1.InsertLast(n)
+		}(i)
+	}
+	wg.Wait()
+
+	ll2 := NewLinkedListConcurrency[int]()
+	for i := 0; i < 4; i++ {
+		ll2.InsertLast(i + 3)
+	}
+
+	t.Logf("Before swap: ll1 = %v, ll2 = %v", ll1.ToSlice(), ll2.ToSlice())
+
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		ll1.Swap(ll2)
+	}()
+
+	go func() {
+		defer wg.Done()
+		ll2.Swap(ll1)
+	}()
+
+	c := make(chan struct{})
+
+	go func() {
+		wg.Wait()
+		close(c)
+	}()
+
+	select {
+	case <-c:
+		t.Log("Swap completed without deadlock")
+	case <-time.After(2 * time.Second):
+		t.Fatal("Potential deadlock detected")
+	}
+
+	t.Logf("After swap: ll1 = %v, ll2 = %v", ll1.ToSlice(), ll2.ToSlice())
+}
+
+func TestMergeEnd(t *testing.T) {
+	// Create the first linked list
+	ll1 := NewLinkedListConcurrency[int]()
+	ll1.InsertLast(1)
+	ll1.InsertLast(2)
+	ll1.InsertLast(3)
+
+	// Create the second linked list
+	ll2 := NewLinkedListConcurrency[int]()
+	ll2.InsertLast(4)
+	ll2.InsertLast(5)
+
+	// Create a wait group
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	// Merge ll2 to the end of ll1 using goroutine
+	go func() {
+		ll1.MergeEnd(ll2)
+		wg.Done()
+	}()
+
+	// Wait for the goroutine to finish
+	wg.Wait()
+
+	// Verify the merged list
+	expected := []int{1, 2, 3, 4, 5}
+	result := ll1.ToSlice()
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("MergeEnd failed. Expected: %v, got: %v", expected, result)
+	}
+}
+
+func TestMergeBegin(t *testing.T) {
+	// Create the first linked list
+	ll1 := NewLinkedListConcurrency[int]()
+	ll1.InsertLast(1)
+	ll1.InsertLast(2)
+	ll1.InsertLast(3)
+
+	// Create the second linked list
+	ll2 := NewLinkedListConcurrency[int]()
+	ll2.InsertLast(4)
+	ll2.InsertLast(5)
+
+	// Create a wait group
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	// Merge ll2 to the beginning of ll1 using goroutine
+	go func() {
+		ll1.MergeBegin(ll2)
+		wg.Done()
+	}()
+
+	// Wait for the goroutine to finish
+	wg.Wait()
+
+	// Verify the merged list
+	expected := []int{4, 5, 1, 2, 3}
+	result := ll1.ToSlice()
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("MergeBegin failed. Expected: %v, got: %v", expected, result)
 	}
 }

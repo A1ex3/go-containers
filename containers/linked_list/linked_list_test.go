@@ -1,6 +1,7 @@
 package linkedlist
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/a1ex3/go-containers/iterator"
@@ -356,5 +357,88 @@ func TestUpdate(t *testing.T) {
 	}
 	if data != 5 {
 		t.Errorf("Updated data does not match")
+	}
+}
+
+func TestSwap(t *testing.T) {
+	ll1 := NewLinkedList[int]()
+	ll2 := NewLinkedList[int]()
+
+	ll1.InsertLast(1)
+	ll1.InsertLast(2)
+	ll1.InsertLast(3)
+	ll1.InsertLast(4)
+
+	ll2.InsertLast(5)
+	ll2.InsertLast(6)
+	ll2.InsertLast(7)
+
+	ll1.Swap(ll2)
+
+	if ll1.Size() != 3 {
+		t.Errorf("Swap error List 1, expected size: %v, output: %v", 3, ll1.Size())
+	}
+
+	if ll2.Size() != 4 {
+		t.Errorf("Swap error List 2, expected size: %v, output: %v", 4, ll2.Size())
+	}
+
+	ll1Slice := ll1.ToSlice()
+	for i := 0; i < 3; i++ {
+		if val := i + 5; val != ll1Slice[i] {
+			t.Errorf("Swap error List 1, expected: %v, output: %v", val, ll1Slice[i])
+		}
+	}
+
+	ll2Slice := ll2.ToSlice()
+	for i := 0; i < 3; i++ {
+		if val := i + 1; val != ll2Slice[i] {
+			t.Errorf("Swap error List 2, expected: %v, output: %v", val, ll2Slice[i])
+		}
+	}
+}
+
+func TestMergeEnd(t *testing.T) {
+	// Create the first linked list
+	ll1 := NewLinkedList[int]()
+	ll1.InsertLast(1)
+	ll1.InsertLast(2)
+	ll1.InsertLast(3)
+
+	// Create the second linked list
+	ll2 := NewLinkedList[int]()
+	ll2.InsertLast(4)
+	ll2.InsertLast(5)
+
+	// Merge ll2 to the end of ll1
+	ll1.MergeEnd(ll2)
+
+	// Verify the merged list
+	expected := []int{1, 2, 3, 4, 5}
+	result := ll1.ToSlice()
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("MergeEnd failed. Expected: %v, got: %v", expected, result)
+	}
+}
+func TestMergeBegin(t *testing.T) {
+	// Create the first linked list
+	ll1 := NewLinkedList[int]()
+	ll1.InsertLast(1)
+	ll1.InsertLast(2)
+	ll1.InsertLast(3)
+
+	// Create the second linked list
+	ll2 := NewLinkedList[int]()
+	ll2.InsertLast(4)
+	ll2.InsertLast(5)
+
+	// Merge ll2 to the beginning of ll1
+	ll1.MergeBegin(ll2)
+
+	// Verify the merged list
+	expected := []int{4, 5, 1, 2, 3}
+	result := ll1.ToSlice()
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("MergeBegin failed. Expected: %v, got: %v", expected, result)
 	}
 }
