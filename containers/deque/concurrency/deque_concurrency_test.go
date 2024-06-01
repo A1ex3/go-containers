@@ -131,12 +131,11 @@ func TestConcurrentMixedOperations(t *testing.T) {
 
 	// Mixed operations concurrently
 	for i := 0; i < pushCount; i++ {
-		wg.Add(1)
+		wg.Add(2) // Increment the wait group counter by 2 for each goroutine
 		go func(n int) {
 			defer wg.Done()
 			q.PushFirst(n)
 		}(i)
-		wg.Add(1)
 		go func(n int) {
 			defer wg.Done()
 			q.PushLast(n)
@@ -146,14 +145,13 @@ func TestConcurrentMixedOperations(t *testing.T) {
 	successCount := make(chan int, popCount*2)
 
 	for i := 0; i < popCount; i++ {
-		wg.Add(1)
+		wg.Add(2) // Increment the wait group counter by 2 for each goroutine
 		go func() {
 			defer wg.Done()
 			if _, err := q.PopFirst(); err == nil {
 				successCount <- 1
 			}
 		}()
-		wg.Add(1)
 		go func() {
 			defer wg.Done()
 			if _, err := q.PopLast(); err == nil {
@@ -162,8 +160,11 @@ func TestConcurrentMixedOperations(t *testing.T) {
 		}()
 	}
 
-	wg.Wait()
-	close(successCount)
+	// Start a goroutine to wait for all goroutines to finish
+	go func() {
+		wg.Wait()
+		close(successCount)
+	}()
 
 	popFirstCount := 0
 	for range successCount {
