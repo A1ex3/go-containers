@@ -9,6 +9,7 @@ type IQueue[T any] interface {
 	Push(T)          // Push adds an element to the queue.
 	Pop() (T, error) // Pop removes and returns the element at the front of the queue.
 	Size() int       // Size returns the number of elements in the queue.
+	Front() (T, error)
 }
 
 // queue is an implementation of the IQueue interface.

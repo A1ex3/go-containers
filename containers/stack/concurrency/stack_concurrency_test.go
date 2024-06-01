@@ -45,3 +45,59 @@ func TestStackConcurrency_PushPopConcurrency(t *testing.T) {
 		t.Errorf("Expected stack length: 0, current stack length: %d", sS)
 	}
 }
+
+func TestTop(t *testing.T) {
+	s := NewStackConcurrency[int]()
+	var wg sync.WaitGroup
+
+	// Number of goroutines to spawn
+	const numGoroutines = 10
+
+	// Synchronize the starting of all goroutines
+	start := make(chan struct{})
+
+	// Push elements concurrently
+	for i := 1; i <= numGoroutines; i++ {
+		wg.Add(1)
+		go func(val int) {
+			defer wg.Done()
+			<-start
+			s.Push(val)
+		}(i)
+	}
+
+	// Signal all goroutines to start
+	close(start)
+	wg.Wait()
+
+	// Test Top on non-empty stack after all pushes
+	top, err := s.Top()
+	if err != nil {
+		t.Errorf("Did not expect an error when calling Top on a non-empty stack: %v", err)
+	}
+	if top < 1 || top > numGoroutines {
+		t.Errorf("Expected top element to be within the range 1 to %d, got %v", numGoroutines, top)
+	}
+
+	// Synchronize the starting of all goroutines
+	start = make(chan struct{})
+
+	// Pop elements concurrently
+	for i := 1; i <= numGoroutines; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			<-start
+			s.Pop()
+		}()
+	}
+
+	// Signal all goroutines to start
+	close(start)
+	wg.Wait()
+
+	// Test Top on empty stack
+	if _, err := s.Top(); err == nil {
+		t.Errorf("Expected an error when calling Top on an empty stack")
+	}
+}

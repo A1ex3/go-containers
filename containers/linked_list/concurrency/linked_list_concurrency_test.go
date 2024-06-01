@@ -475,3 +475,97 @@ func TestMergeBegin(t *testing.T) {
 		t.Errorf("MergeBegin failed. Expected: %v, got: %v", expected, result)
 	}
 }
+
+func TestGetFirst(t *testing.T) {
+	list := NewLinkedListConcurrency[int]()
+	var wg sync.WaitGroup
+
+	// Insert initial elements into the list
+	list.InsertLast(1)
+	list.InsertLast(2)
+	list.InsertLast(3)
+
+	// Function to concurrently get the first element
+	getFirstFunc := func() {
+		defer wg.Done()
+		_, err := list.GetFirst()
+		if err != nil {
+			t.Errorf("Unexpected error: %v", err)
+		}
+	}
+
+	// Spawn multiple goroutines to get the first element
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go getFirstFunc()
+	}
+
+	// Wait for all goroutines to finish
+	wg.Wait()
+}
+
+func TestGetLast(t *testing.T) {
+	list := NewLinkedListConcurrency[int]()
+	var wg sync.WaitGroup
+
+	// Insert initial elements into the list
+	list.InsertLast(1)
+	list.InsertLast(2)
+	list.InsertLast(3)
+
+	// Function to concurrently get the last element
+	getLastFunc := func() {
+		defer wg.Done()
+		_, err := list.GetLast()
+		if err != nil {
+			t.Errorf("Unexpected error: %v", err)
+		}
+	}
+
+	// Spawn multiple goroutines to get the last element
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go getLastFunc()
+	}
+
+	// Wait for all goroutines to finish
+	wg.Wait()
+}
+
+func TestGetFirstAndLast(t *testing.T) {
+	list := NewLinkedListConcurrency[int]()
+	var wg sync.WaitGroup
+
+	// Insert initial elements into the list
+	list.InsertLast(1)
+	list.InsertLast(2)
+	list.InsertLast(3)
+
+	// Function to concurrently get the first element
+	getFirstFunc := func() {
+		defer wg.Done()
+		_, err := list.GetFirst()
+		if err != nil {
+			t.Errorf("Unexpected error: %v", err)
+		}
+	}
+
+	// Function to concurrently get the last element
+	getLastFunc := func() {
+		defer wg.Done()
+		_, err := list.GetLast()
+		if err != nil {
+			t.Errorf("Unexpected error: %v", err)
+		}
+	}
+
+	// Spawn multiple goroutines to get the first and last elements concurrently
+	for i := 0; i < 10; i++ {
+		wg.Add(2)
+		go getFirstFunc()
+		go getLastFunc()
+	}
+
+	// Wait for all goroutines to finish
+	wg.Wait()
+}

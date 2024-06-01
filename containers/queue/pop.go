@@ -6,15 +6,11 @@ import (
 
 func (q *queue[T]) pop() (T, error) {
 	var zero T
-	// If the queue is empty, return an error.
-	if q.data.Size() == 0 {
-		return zero, errors.New("empty queue")
-	}
 
 	// Get the element at the front of the queue.
-	res, err := q.data.GetByIndex(0)
+	res, err := q.data.GetFirst()
 	if err != nil {
-		return zero, err
+		return zero, errors.New("empty queue")
 	}
 
 	// Remove the element from the queue.

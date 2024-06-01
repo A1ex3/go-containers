@@ -45,3 +45,30 @@ func TestQueue_PopConcurrently(t *testing.T) {
 		t.Errorf("Expected queue size to be 0, got %d", q.Size())
 	}
 }
+
+func TestFront(t *testing.T) {
+	q := NewQueueConcurrency[int]() // Create a new instance of the queue.
+
+	// Add elements to the queue
+	for i := 0; i < 100; i++ {
+		q.Push(i)
+	}
+
+	var wg sync.WaitGroup
+	wg.Add(100)
+
+	// Concurrently call Front() method
+	for i := 0; i < 100; i++ {
+		go func() {
+			defer wg.Done()
+			front, err := q.Front()
+			if err != nil {
+				t.Errorf("Error getting front element: %v", err)
+			}
+			// Do something with front element if needed
+			_ = front
+		}()
+	}
+
+	wg.Wait() // Wait for all goroutines to finish
+}

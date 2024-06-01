@@ -442,3 +442,51 @@ func TestMergeBegin(t *testing.T) {
 		t.Errorf("MergeBegin failed. Expected: %v, got: %v", expected, result)
 	}
 }
+
+func TestGetFirst(t *testing.T) {
+	list := NewLinkedList[int]()
+
+	// Test when the list is empty
+	_, err := list.GetFirst()
+	if err == nil {
+		t.Error("Expected error for empty list, got nil")
+	}
+
+	// Insert elements into the list
+	list.InsertLast(1)
+	list.InsertLast(2)
+	list.InsertLast(3)
+
+	// Test when the list has elements
+	first, err := list.GetFirst()
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+	if first != 1 {
+		t.Errorf("Expected first element to be 1, got %d", first)
+	}
+}
+
+func TestGetLast(t *testing.T) {
+	list := NewLinkedList[int]()
+
+	// Test when the list is empty
+	_, err := list.GetLast()
+	if err == nil {
+		t.Error("Expected error for empty list, got nil")
+	}
+
+	// Insert elements into the list
+	list.InsertLast(1)
+	list.InsertLast(2)
+	list.InsertLast(3)
+
+	// Test when the list has elements
+	last, err := list.GetLast()
+	if err != nil {
+		t.Errorf("Unexpected error: %v", err)
+	}
+	if last != 3 {
+		t.Errorf("Expected last element to be 3, got %d", last)
+	}
+}

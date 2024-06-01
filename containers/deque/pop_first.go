@@ -7,15 +7,10 @@ import (
 func (d *deque[T]) popFirst() (T, error) {
 	var zero T // Default value of type T
 
-	// Check if the deque is empty
-	if d.data.Size() == 0 {
-		return zero, errors.New("empty deque")
-	}
-
 	// Retrieve the first element
-	res, err := d.data.GetByIndex(0)
+	res, err := d.data.GetFirst()
 	if err != nil {
-		return zero, err
+		return zero, errors.New("empty deque")
 	}
 
 	// Remove the first element from the deque

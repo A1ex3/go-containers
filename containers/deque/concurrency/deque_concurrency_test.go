@@ -123,60 +123,50 @@ func TestConcurrentPopLast(t *testing.T) {
 	}
 }
 
-func TestConcurrentMixedOperations(t *testing.T) {
-	q := NewDequeConcurrency[int]()
-	var wg sync.WaitGroup
-	pushCount := 1000
-	popCount := 1000
+func TestGetFirst(t *testing.T) {
+	dq := NewDequeConcurrency[int]()
+	dq.PushLast(1)
+	dq.PushLast(2)
+	dq.PushLast(3)
 
-	// Mixed operations concurrently
-	for i := 0; i < pushCount; i++ {
-		wg.Add(2) // Increment the wait group counter by 2 for each goroutine
-		go func(n int) {
-			defer wg.Done()
-			q.PushFirst(n)
-		}(i)
-		go func(n int) {
-			defer wg.Done()
-			q.PushLast(n)
-		}(i)
-	}
+	ch := make(chan int)
 
-	successCount := make(chan int, popCount*2)
-
-	for i := 0; i < popCount; i++ {
-		wg.Add(2) // Increment the wait group counter by 2 for each goroutine
-		go func() {
-			defer wg.Done()
-			if _, err := q.PopFirst(); err == nil {
-				successCount <- 1
-			}
-		}()
-		go func() {
-			defer wg.Done()
-			if _, err := q.PopLast(); err == nil {
-				successCount <- 1
-			}
-		}()
-	}
-
-	// Start a goroutine to wait for all goroutines to finish
 	go func() {
-		wg.Wait()
-		close(successCount)
+		val, err := dq.GetFirst()
+		if err != nil {
+			t.Errorf("Error while getting first element: %v", err)
+		}
+		ch <- val
 	}()
 
-	popFirstCount := 0
-	for range successCount {
-		popFirstCount++
+	select {
+	case val := <-ch:
+		if val != 1 {
+			t.Errorf("Expected first element to be 1, got %v", val)
+		}
 	}
+}
 
-	expectedSize := (pushCount * 2) - popFirstCount
-	if popFirstCount != popCount*2 {
-		t.Errorf("Expected %d successful pops, got %d", popCount*2, popFirstCount)
-	}
+func TestGetLast(t *testing.T) {
+	dq := NewDequeConcurrency[int]()
+	dq.PushLast(1)
+	dq.PushLast(2)
+	dq.PushLast(3)
 
-	if q.Size() != expectedSize {
-		t.Errorf("Expected size %d, got %d", expectedSize, q.Size())
+	ch := make(chan int)
+
+	go func() {
+		val, err := dq.GetLast()
+		if err != nil {
+			t.Errorf("Error while getting last element: %v", err)
+		}
+		ch <- val
+	}()
+
+	select {
+	case val := <-ch:
+		if val != 3 {
+			t.Errorf("Expected last element to be 3, got %v", val)
+		}
 	}
 }

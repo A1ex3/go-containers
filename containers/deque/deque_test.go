@@ -96,3 +96,45 @@ func TestSize(t *testing.T) {
 		t.Errorf("Expected size 0, got %d", q.Size())
 	}
 }
+
+func TestGetFirst(t *testing.T) {
+	deque := NewDeque[int]()
+
+	// Test getting first element from an empty deque
+	_, err := deque.GetFirst()
+	if err == nil {
+		t.Error("Expected error when getting first element from an empty deque, but got none")
+	}
+
+	// Test getting first element after pushing elements
+	deque.PushLast(1)
+	deque.PushLast(2)
+	firstElement, err := deque.GetFirst()
+	if err != nil {
+		t.Errorf("Error getting first element from deque: %v", err)
+	}
+	if firstElement != 1 {
+		t.Errorf("Expected first element to be 1, but got %d", firstElement)
+	}
+}
+
+func TestGetLast(t *testing.T) {
+	deque := NewDeque[int]()
+
+	// Test getting last element from an empty deque
+	_, err := deque.GetLast()
+	if err == nil {
+		t.Error("Expected error when getting last element from an empty deque, but got none")
+	}
+
+	// Test getting last element after pushing elements
+	deque.PushLast(1)
+	deque.PushLast(2)
+	lastElement, err := deque.GetLast()
+	if err != nil {
+		t.Errorf("Error getting last element from deque: %v", err)
+	}
+	if lastElement != 2 {
+		t.Errorf("Expected last element to be 2, but got %d", lastElement)
+	}
+}

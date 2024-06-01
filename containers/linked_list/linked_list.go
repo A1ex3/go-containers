@@ -59,6 +59,10 @@ type ILinkedList[T any] interface {
 	// Find returns the first element that satisfies the given predicate function.
 	// If no element is found, it returns an error.
 	Find(func(T) bool) (T, error)
+
+	GetFirst() (T, error)
+
+	GetLast() (T, error)
 }
 
 // linkedListNode represents a node in the linked list containing generic data and a reference to the next node.

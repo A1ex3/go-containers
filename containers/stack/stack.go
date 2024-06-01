@@ -11,6 +11,7 @@ type IStack[T any] interface {
 	Push(T)
 	Pop() (T, error)
 	Size() int
+	Top() (T, error)
 }
 
 // stack is a simple generic stack implementation.

@@ -7,14 +7,10 @@ import (
 func (s *stack[T]) pop() (T, error) {
 	var zero T
 
-	if s.data.Size() == 0 {
-		return zero, errors.New("empty stack")
-	}
-
 	// Retrieve the top element from the stack
-	res, err := s.data.GetByIndex(s.data.Size() - 1)
+	res, err := s.data.GetLast()
 	if err != nil {
-		return zero, err
+		return zero, errors.New("empty stack")
 	}
 	// Remove the top element from the stack
 	if !s.data.RemoveLast() {

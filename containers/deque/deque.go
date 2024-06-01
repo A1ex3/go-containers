@@ -11,6 +11,8 @@ type IDeque[T any] interface {
 	PopFirst() (T, error) // Removes and returns an element from the beginning of the deque. Returns an error if the deque is empty.
 	PopLast() (T, error)  // Removes and returns an element from the end of the deque. Returns an error if the deque is empty.
 	Size() int            // Returns the number of elements in the deque.
+	GetFirst() (T, error)
+	GetLast() (T, error)
 }
 
 type deque[T any] struct {

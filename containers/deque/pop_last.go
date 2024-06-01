@@ -7,15 +7,10 @@ import (
 func (d *deque[T]) popLast() (T, error) {
 	var zero T // Default value of type T
 
-	// Check if the deque is empty
-	if d.data.Size() == 0 {
-		return zero, errors.New("empty deque")
-	}
-
 	// Retrieve the last element
-	res, err := d.data.GetByIndex(d.data.Size() - 1)
+	res, err := d.data.GetLast()
 	if err != nil {
-		return zero, err
+		return zero, errors.New("empty deque")
 	}
 
 	// Remove the last element from the deque

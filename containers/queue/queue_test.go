@@ -80,3 +80,63 @@ func TestQueue_PopEmpty(t *testing.T) {
 		t.Errorf("expected error, got nil")
 	}
 }
+
+func TestQueue(t *testing.T) {
+	q := NewQueue[int]()
+
+	q.Push(1)
+	q.Push(2)
+	q.Push(3)
+
+	front, err := q.Front()
+	if err != nil {
+		t.Errorf("Front() returned an error: %v", err)
+	}
+	if front != 1 {
+		t.Errorf("Front() returned %d, expected 1", front)
+	}
+
+	popped, err := q.Pop()
+	if err != nil {
+		t.Errorf("Pop() returned an error: %v", err)
+	}
+	if popped != 1 {
+		t.Errorf("Pop() returned %d, expected 1", popped)
+	}
+
+	size := q.Size()
+	if size != 2 {
+		t.Errorf("Size() returned %d, expected 2", size)
+	}
+
+	popped, err = q.Pop()
+	if err != nil {
+		t.Errorf("Pop() returned an error: %v", err)
+	}
+	if popped != 2 {
+		t.Errorf("Pop() returned %d, expected 2", popped)
+	}
+
+	size = q.Size()
+	if size != 1 {
+		t.Errorf("Size() returned %d, expected 1", size)
+	}
+
+	popped, err = q.Pop()
+	if err != nil {
+		t.Errorf("Pop() returned an error: %v", err)
+	}
+	if popped != 3 {
+		t.Errorf("Pop() returned %d, expected 3", popped)
+	}
+
+	size = q.Size()
+	if size != 0 {
+		t.Errorf("Size() returned %d, expected 0", size)
+	}
+
+	_, err = q.Pop()
+	if err == nil {
+		t.Error("Pop() did not return an error on empty queue")
+	}
+}
