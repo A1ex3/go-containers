@@ -1,7 +1,7 @@
 package queue
 
 func (q *queue[T]) push(value T) {
-	q.data.InsertLast(value)
+	q.data.PushLast(value)
 }
 
 // Push adds an element to the back of the queue.

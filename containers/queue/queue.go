@@ -1,7 +1,7 @@
 package queue
 
 import (
-	linkedlist "github.com/a1ex3/go-containers/containers/linked_list"
+	"github.com/a1ex3/go-containers/containers/deque"
 )
 
 // IQueue defines the interface for a generic queue.
@@ -14,7 +14,7 @@ type IQueue[T any] interface {
 
 // queue is an implementation of the IQueue interface.
 type queue[T any] struct {
-	data *linkedlist.LinkedList[T] // data holds the elements of the queue in a linked list.
+	data *deque.Deque[T]
 }
 
 // Queue is a public wrapper around the private queue struct.
@@ -24,9 +24,9 @@ type Queue[T any] struct {
 
 // newQueue creates a new instance of the queue struct.
 func newQueue[T any]() *queue[T] {
-	linkedList := linkedlist.NewLinkedList[T]() // Create a new linked list for the queue data.
+	deque := deque.NewDeque[T]()
 	return &queue[T]{
-		data: linkedList, // Initialize the queue's data field with the linked list.
+		data: deque,
 	}
 }
 

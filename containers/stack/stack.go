@@ -1,7 +1,7 @@
 package stack
 
 import (
-	linkedlist "github.com/a1ex3/go-containers/containers/linked_list"
+	"github.com/a1ex3/go-containers/containers/deque"
 )
 
 // IStack defines the interface for a generic stack.
@@ -17,7 +17,7 @@ type IStack[T any] interface {
 // stack is a simple generic stack implementation.
 // The type parameter T represents the type of elements stored in the stack.
 type stack[T any] struct {
-	data *linkedlist.LinkedList[T] // Slice to store the stack elements.
+	data *deque.Deque[T]
 }
 
 type Stack[T any] struct {
@@ -25,9 +25,9 @@ type Stack[T any] struct {
 }
 
 func newStack[T any]() *stack[T] {
-	linkedList := linkedlist.NewLinkedList[T]()
+	deque := deque.NewDeque[T]()
 	return &stack[T]{
-		data: linkedList,
+		data: deque,
 	}
 }
 
