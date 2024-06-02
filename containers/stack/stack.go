@@ -12,6 +12,7 @@ type IStack[T any] interface {
 	Pop() (T, error)
 	Size() int
 	Top() (T, error)
+	ToSlice() []T
 }
 
 // stack is a simple generic stack implementation.

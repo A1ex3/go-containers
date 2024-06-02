@@ -138,3 +138,41 @@ func TestGetLast(t *testing.T) {
 		t.Errorf("Expected last element to be 2, but got %d", lastElement)
 	}
 }
+
+func TestSwap(t *testing.T) {
+	deq1 := NewDeque[int]()
+	deq2 := NewDeque[int]()
+
+	deq1.PushLast(1)
+	deq1.PushLast(2)
+	deq1.PushLast(3)
+	deq1.PushLast(4)
+
+	deq2.PushLast(5)
+	deq2.PushLast(6)
+	deq2.PushLast(7)
+
+	deq1.Swap(deq2)
+
+	if deq1.Size() != 3 {
+		t.Errorf("Swap error List 1, expected size: %v, output: %v", 3, deq1.Size())
+	}
+
+	if deq2.Size() != 4 {
+		t.Errorf("Swap error List 2, expected size: %v, output: %v", 4, deq2.Size())
+	}
+
+	deq1Slice := deq1.ToSlice()
+	for i := 0; i < 3; i++ {
+		if val := i + 5; val != deq1Slice[i] {
+			t.Errorf("Swap error List 1, expected: %v, output: %v", val, deq1Slice[i])
+		}
+	}
+
+	deq2Slice := deq2.ToSlice()
+	for i := 0; i < 3; i++ {
+		if val := i + 1; val != deq2Slice[i] {
+			t.Errorf("Swap error List 2, expected: %v, output: %v", val, deq2Slice[i])
+		}
+	}
+}

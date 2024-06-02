@@ -9,7 +9,7 @@ func (d *deque[T]) getFirst() (T, error) {
 	if err != nil {
 		return res, errors.New("empty deque")
 	}
-	
+
 	return res, nil
 }
 

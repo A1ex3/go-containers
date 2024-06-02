@@ -13,6 +13,7 @@ type IDeque[T any] interface {
 	Size() int            // Returns the number of elements in the deque.
 	GetFirst() (T, error)
 	GetLast() (T, error)
+	ToSlice() []T
 }
 
 type deque[T any] struct {
