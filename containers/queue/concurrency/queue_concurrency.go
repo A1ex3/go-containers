@@ -6,26 +6,26 @@ import (
 	"github.com/a1ex3/go-containers/containers/queue"
 )
 
-type queueConcurrency[T any] struct {
+type QueueDequeConcurrency[T any] struct {
 	mu         sync.Mutex
-	queueSync_ *queue.Queue[T]
+	queueSync_ *queue.QueueDeque[T]
 }
 
-type QueueConcurrency[T any] struct {
-	queue_ *queueConcurrency[T]
+type QueueSliceConcurrency[T any] struct {
+	mu         sync.Mutex
+	queueSync_ *queue.QueueSlice[T]
 }
 
-func newQueueConcurrency[T any]() *queueConcurrency[T] {
-	queue := queue.NewQueue[T]()
-	return &queueConcurrency[T]{
+func NewQueueDequeConcurrency[T any]() *QueueDequeConcurrency[T] {
+	return &QueueDequeConcurrency[T]{
 		mu:         sync.Mutex{},
-		queueSync_: queue,
+		queueSync_: queue.NewQueueDeque[T](),
 	}
 }
 
-func NewQueueConcurrency[T any]() *QueueConcurrency[T] {
-	qe := newQueueConcurrency[T]()
-	return &QueueConcurrency[T]{
-		queue_: qe,
+func NewQueueSliceConcurrency[T any]() *QueueSliceConcurrency[T] {
+	return &QueueSliceConcurrency[T]{
+		mu:         sync.Mutex{},
+		queueSync_: queue.NewQueueSlice[T](),
 	}
 }

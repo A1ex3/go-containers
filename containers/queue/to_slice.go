@@ -1,10 +1,9 @@
 package queue
 
-func (q *queue[T]) toSlice() []T {
+func (q *QueueDeque[T]) ToSlice() []T {
 	return q.data.ToSlice()
 }
 
-// Size returns the number of elements in the queue.
-func (q *Queue[T]) ToSlice() []T {
-	return q.queue_.toSlice()
+func (q *QueueSlice[T]) ToSlice() []T {
+	return q.data
 }

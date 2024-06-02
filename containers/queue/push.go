@@ -1,10 +1,11 @@
 package queue
 
-func (q *queue[T]) push(value T) {
+// Push adds an element to the back of the queue.
+func (q *QueueDeque[T]) Push(value T) {
 	q.data.PushLast(value)
 }
 
-// Push adds an element to the back of the queue.
-func (q *Queue[T]) Push(value T) {
-	q.queue_.push(value)
+func (s *QueueSlice[T]) Push(value T) {
+	s.data = append(s.data, value)
+	s.size++
 }

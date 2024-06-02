@@ -1,11 +1,13 @@
 package concurrency
 
-func (s *stackConcurrency[T]) toSlice() []T {
+func (s *StackDequeConcurrency[T]) ToSlice() []T {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	return s.stackSync_.ToSlice()
+	return s.stackDeque_.ToSlice()
 }
 
-func (s *StackConcurrency[T]) ToSlice() []T {
-	return s.stack_.toSlice()
+func (s *StackSliceConcurrency[T]) ToSlice() []T {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.stackSlice_.ToSlice()
 }

@@ -1,11 +1,13 @@
 package concurrency
 
-func (s *stackConcurrency[T]) top() (T, error) {
+func (s *StackDequeConcurrency[T]) Top() (T, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	return s.stackSync_.Top()
+	return s.stackDeque_.Top()
 }
 
-func (s *StackConcurrency[T]) Top() (T, error) {
-	return s.stack_.top()
+func (s *StackSliceConcurrency[T]) Top() (T, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.stackSlice_.Top()
 }

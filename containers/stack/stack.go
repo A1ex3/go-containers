@@ -15,27 +15,25 @@ type IStack[T any] interface {
 	ToSlice() []T
 }
 
-// stack is a simple generic stack implementation.
-// The type parameter T represents the type of elements stored in the stack.
-type stack[T any] struct {
+type StackDeque[T any] struct {
 	data *deque.Deque[T]
 }
 
-type Stack[T any] struct {
-	stack_ *stack[T]
+type StackSlice[T any] struct {
+	data []T
+	size int
 }
 
-func newStack[T any]() *stack[T] {
-	deque := deque.NewDeque[T]()
-	return &stack[T]{
-		data: deque,
+// NewStackDeque initializes a new instance of Stack.
+func NewStackDeque[T any]() *StackDeque[T] {
+	return &StackDeque[T]{
+		data: deque.NewDeque[T](),
 	}
 }
 
-// NewStack initializes a new instance of Stack.
-func NewStack[T any]() *Stack[T] {
-	st := newStack[T]()
-	return &Stack[T]{
-		stack_: st,
+func NewStackSlice[T any]() *StackSlice[T] {
+	return &StackSlice[T]{
+		data: make([]T, 0),
+		size: 0,
 	}
 }

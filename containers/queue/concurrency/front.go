@@ -1,12 +1,15 @@
 package concurrency
 
-func (q *queueConcurrency[T]) front() (T, error) {
+func (q *QueueDequeConcurrency[T]) Front() (T, error) {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
 	return q.queueSync_.Front()
 }
 
-func (q *QueueConcurrency[T]) Front() (T, error) {
-	return q.queue_.front()
+func (q *QueueSliceConcurrency[T]) Front() (T, error) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+
+	return q.queueSync_.Front()
 }

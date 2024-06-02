@@ -1,12 +1,15 @@
 package concurrency
 
-func (q *queueConcurrency[T]) pop() (T, error) {
+func (q *QueueDequeConcurrency[T]) Pop() (T, error) {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
 	return q.queueSync_.Pop()
 }
 
-func (q *QueueConcurrency[T]) Pop() (T, error) {
-	return q.queue_.pop()
+func (q *QueueSliceConcurrency[T]) Pop() (T, error) {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+
+	return q.queueSync_.Pop()
 }

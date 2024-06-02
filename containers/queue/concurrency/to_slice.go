@@ -1,12 +1,15 @@
 package concurrency
 
-func (q *queueConcurrency[T]) toSlice() []T {
+func (q *QueueDequeConcurrency[T]) ToSlice() []T {
 	q.mu.Lock()
 	defer q.mu.Unlock()
 
 	return q.queueSync_.ToSlice()
 }
 
-func (q *QueueConcurrency[T]) ToSlice() []T {
-	return q.queue_.toSlice()
+func (q *QueueSliceConcurrency[T]) ToSlice() []T {
+	q.mu.Lock()
+	defer q.mu.Unlock()
+
+	return q.queueSync_.ToSlice()
 }

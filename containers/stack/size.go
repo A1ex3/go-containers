@@ -1,10 +1,11 @@
 package stack
 
-func (s *stack[T]) size_() int {
+// Size returns the current number of elements in the stack.
+func (s *StackDeque[T]) Size() int {
 	return s.data.Size()
 }
 
 // Size returns the current number of elements in the stack.
-func (s *Stack[T]) Size() int {
-	return s.stack_.size_()
+func (s *StackSlice[T]) Size() int {
+	return s.size
 }

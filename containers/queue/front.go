@@ -2,7 +2,7 @@ package queue
 
 import "errors"
 
-func (q *queue[T]) front() (T, error) {
+func (q *QueueDeque[T]) Front() (T, error) {
 	lastElem, err := q.data.GetFirst()
 	if err != nil {
 		return lastElem, errors.New("queue is empty")
@@ -11,7 +11,10 @@ func (q *queue[T]) front() (T, error) {
 	}
 }
 
-// Push adds an element to the back of the queue.
-func (q *Queue[T]) Front() (T, error) {
-	return q.queue_.front()
+func (q *QueueSlice[T]) Front() (T, error) {
+	if q.size == 0 {
+		var zero T
+		return zero, errors.New("queue is empty")
+	}
+	return q.data[0], nil
 }

@@ -2,7 +2,7 @@ package stack
 
 import "errors"
 
-func (s *stack[T]) top() (T, error) {
+func (s *StackDeque[T]) Top() (T, error) {
 	lastElem, err := s.data.GetLast()
 	if err != nil {
 		return lastElem, errors.New("stack is empty")
@@ -11,6 +11,11 @@ func (s *stack[T]) top() (T, error) {
 	}
 }
 
-func (s *Stack[T]) Top() (T, error) {
-	return s.stack_.top()
+func (s *StackSlice[T]) Top() (T, error) {
+	if s.size == 0 {
+		var zero T
+		return zero, errors.New("stack is empty")
+	} else {
+		return s.data[s.size-1], nil
+	}
 }
