@@ -5,11 +5,9 @@ import (
 )
 
 func (d *deque[T]) getFirst() (T, error) {
-	var zero T
-
 	res, err := d.data.GetFirst()
 	if err != nil {
-		return zero, errors.New("empty deque")
+		return res, errors.New("empty deque")
 	}
 	
 	return res, nil

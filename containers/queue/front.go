@@ -5,8 +5,7 @@ import "errors"
 func (q *queue[T]) front() (T, error) {
 	lastElem, err := q.data.GetFirst()
 	if err != nil {
-		var zero T
-		return zero, errors.New("queue is empty")
+		return lastElem, errors.New("queue is empty")
 	} else {
 		return lastElem, nil
 	}

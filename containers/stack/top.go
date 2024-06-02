@@ -5,8 +5,7 @@ import "errors"
 func (s *stack[T]) top() (T, error) {
 	lastElem, err := s.data.GetLast()
 	if err != nil {
-		var zero T
-		return zero, errors.New("stack is empty")
+		return lastElem, errors.New("stack is empty")
 	} else {
 		return lastElem, nil
 	}
