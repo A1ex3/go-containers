@@ -7,3 +7,4 @@
 | Linked list | &#10003; |
 | Queue | &#10003; |
 | Deque | &#10003; |
+| Unordered set | &#10007; |

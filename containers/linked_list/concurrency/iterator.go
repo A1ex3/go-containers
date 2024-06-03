@@ -11,8 +11,8 @@ type linkedListIteratorConcurrency[T any] struct {
 	iterSync *linkedlist.LinkedListIterator[T]
 }
 
-func NewIteratorConcurrency[T any](linkedList *linkedlist.LinkedList[T]) *linkedListIteratorConcurrency[T] {
-	iter := linkedlist.NewIterator[T](linkedList)
+func (linkedList *LinkedList[T]) NewIteratorConcurrency() *linkedListIteratorConcurrency[T] {
+	iter := linkedList.linkedList_.linkedListSync.NewIterator()
 	return &linkedListIteratorConcurrency[T]{
 		mu:       sync.Mutex{},
 		iterSync: iter,

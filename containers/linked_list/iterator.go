@@ -6,7 +6,7 @@ type LinkedListIterator[T any] struct {
 	current *LinkedListNode[T]
 }
 
-func NewIterator[T any](linkedList *LinkedList[T]) *LinkedListIterator[T] {
+func (linkedList *LinkedList[T]) NewIterator() *LinkedListIterator[T] {
 	return &LinkedListIterator[T]{current: linkedList.linkedList_.head}
 }
 

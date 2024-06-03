@@ -294,7 +294,7 @@ func TestIterator(t *testing.T) {
 	ll.InsertLast(3)
 
 	// Get an iterator for the list
-	var it iterator.IIterator[int] = NewIterator(ll)
+	var it iterator.IIterator[int] = ll.NewIterator()
 
 	// Test hasNext and next
 	expected := []int{1, 2, 3}

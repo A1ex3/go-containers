@@ -277,12 +277,12 @@ func TestFind(t *testing.T) {
 }
 
 func TestLinkedListIterator(t *testing.T) {
-	ll := linkedlist.NewLinkedList[int]()
+	ll := NewLinkedListConcurrency[int]()
 	ll.InsertLast(1)
 	ll.InsertLast(2)
 	ll.InsertLast(3)
 
-	iter := NewIteratorConcurrency[int](ll)
+	iter := ll.NewIteratorConcurrency()
 
 	var sum int
 	var wg sync.WaitGroup
