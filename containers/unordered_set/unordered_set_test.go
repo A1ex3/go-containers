@@ -174,27 +174,28 @@ func TestIterator(t *testing.T) {
 	iterator := set.NewIterator()
 
 	// Test HasNext and Next
-	expectedValues := []int{1, 2, 3}
-	for i := 0; i < len(expectedValues); i++ {
-		if !iterator.HasNext() {
-			t.Errorf("Iterator HasNext failed. Expected true, got false")
-		}
+	expectedValues := map[int]bool{1: true, 2: true, 3: true}
+	remaining := len(expectedValues)
 
+	for iterator.HasNext() {
 		nextValue, err := iterator.Next()
 		if err != nil {
 			t.Errorf("Iterator Next failed: %v", err)
 		}
 
-		if nextValue != expectedValues[i] {
-			t.Errorf("Iterator Next failed. Expected %d, got %d", expectedValues[i], nextValue)
+		if _, exists := expectedValues[nextValue]; !exists {
+			t.Errorf("Iterator returned unexpected value: %d", nextValue)
+		} else {
+			delete(expectedValues, nextValue)
+			remaining--
 		}
 	}
 
-	// Test Next when there are no more elements
-	if iterator.HasNext() {
-		t.Errorf("Iterator HasNext failed. Expected false, got true")
+	if remaining != 0 {
+		t.Errorf("Iterator did not return all expected values. Remaining: %d", remaining)
 	}
 
+	// Test Next when there are no more elements
 	_, err := iterator.Next()
 	if err == nil || err.Error() != "no more elements" {
 		t.Errorf("Iterator Next failed. Expected 'no more elements' error, got %v", err)
