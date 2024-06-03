@@ -2,6 +2,7 @@ package unorderedset
 
 import (
 	"reflect"
+	"slices"
 	"testing"
 )
 
@@ -71,7 +72,7 @@ func TestToSlice(t *testing.T) {
 
 	slice := set.ToSlice()
 
-	if len(slice) != 2 || slice[0] != 1 || slice[1] != 2 {
+	if len(slice) != 2 || !slices.Contains(slice, 1) || !slices.Contains(slice, 2) {
 		t.Errorf("ToSlice method did not return correct slice")
 	}
 }
