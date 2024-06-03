@@ -15,24 +15,24 @@ type IQueue[T any] interface {
 
 // Queue is a public wrapper around the private queue struct.
 type QueueDeque[T any] struct {
-	data *deque.Deque[T]
+	Data *deque.Deque[T]
 }
 
 type QueueSlice[T any] struct {
-	data []T
-	size int
+	Data []T
+	Size_ int
 }
 
 // NewQueueDeque creates a new instance of the queue struct.
 func NewQueueDeque[T any]() *QueueDeque[T] {
 	return &QueueDeque[T]{
-		data: deque.NewDeque[T](),
+		Data: deque.NewDeque[T](),
 	}
 }
 
 func NewQueueSlice[T any]() *QueueSlice[T] {
 	return &QueueSlice[T]{
-		data: make([]T, 0),
-		size: 0,
+		Data: make([]T, 0),
+		Size_: 0,
 	}
 }

@@ -1,9 +1,9 @@
 package queue
 
 func (q *QueueDeque[T]) ToSlice() []T {
-	return q.data.ToSlice()
+	return q.Data.ToSlice()
 }
 
 func (q *QueueSlice[T]) ToSlice() []T {
-	return q.data
+	return q.Data
 }

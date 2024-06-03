@@ -16,24 +16,24 @@ type IStack[T any] interface {
 }
 
 type StackDeque[T any] struct {
-	data *deque.Deque[T]
+	Data *deque.Deque[T]
 }
 
 type StackSlice[T any] struct {
-	data []T
-	size int
+	Data []T
+	Size_ int
 }
 
 // NewStackDeque initializes a new instance of Stack.
 func NewStackDeque[T any]() *StackDeque[T] {
 	return &StackDeque[T]{
-		data: deque.NewDeque[T](),
+		Data: deque.NewDeque[T](),
 	}
 }
 
 func NewStackSlice[T any]() *StackSlice[T] {
 	return &StackSlice[T]{
-		data: make([]T, 0),
-		size: 0,
+		Data: make([]T, 0),
+		Size_: 0,
 	}
 }
